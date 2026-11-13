@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Станция 1: Анатомия компьютера / Компьютер анатомиясы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --accent: #4ade80;
+            --danger: #f43f5e;
+            --text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .station-tag {
+            background: var(--primary);
+            color: #000;
+            font-weight: 900;
+            font-size: 1.2rem;
+            padding: 6px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        h1 {
+            font-size: clamp(1.6rem, 2.5vw, 2.6rem);
+            font-weight: 900;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1300px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Сетка загадок */
+        .riddles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .riddle-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .riddle-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(56, 189, 248, 0.2);
+        }
+
+        .riddle-number {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .riddle-block {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+
+        .lang-kz {
+            color: #cbd5e1;
+            font-style: italic;
+            border-left: 3px solid var(--primary);
+            padding-left: 10px;
+            margin-top: 6px;
+        }
+
+        .answer-box {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px dashed var(--primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .riddle-card.revealed .answer-box {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .riddle-card.revealed {
+            border-color: var(--accent);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        /* Боковая панель с таймером */
+        .sidebar {
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 20px;
+        }
+
+        .timer-title {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-display.danger {
+            color: var(--danger);
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .btn {
+            background: var(--primary);
+            color: #0f172a;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text);
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #64748b;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="station-tag">Станция 1</div>
+        <h1>Анатомия компьютера / Компьютер анатомиясы</h1>
+    </header>
+
+    <div class="main-container">
+        <!-- Сетка загадок -->
+        <div class="riddles-grid" id="riddlesGrid">
+            <!-- Загадка 1 -->
+            <div class="riddle-card" onclick="toggleReveal(this)">
+                <div class="riddle-number">Загадка №1</div>
+                <div class="riddle-block">🇷🇺 У него экран большой, он с картинкой и с душой.</div>
+                <div class="riddle-block lang-kz">🇰🇿 Көзім бар, бірақ көрмеймін, суретімді көрсетемін. Кино, ойын, сабақтарды мен арқылы көресің.</div>
+                <div class="answer-box">🖥️ Монитор</div>
+            </div>
+
+            <!-- Загадка 2 -->
+            <div class="riddle-card" onclick="toggleReveal(this)">
+                <div class="riddle-number">Загадка №2</div>
+                <div class="riddle-block">🇷🇺 Кнопки на доске рядами, управляем ими сами.</div>
+                <div class="riddle-block lang-kz">🇰🇿 Батырмасы көп қатар-қатар, әріп жазар таңбалар. Сөз теремін, сан теремін, бұл құрылғы қалай аталар?</div>
+                <div class="answer-box">⌨️ Клавиатура / Пернетақта</div>
+            </div>
+
+            <!-- Загадка 3 -->
+            <div class="riddle-card" onclick="toggleReveal(this)">
+                <div class="riddle-number">Загадка №3</div>
+                <div class="riddle-block">🇷🇺 Хвостик длинный, но не кошка, по ковру бежит дорожка.</div>
+                <div class="riddle-block lang-kz">🇰🇿 Құйрығы бар ұзыннан, жүріп өтемін кілемнен. Экрандағы көрсеткішті басқарамын өзіммен.</div>
+                <div class="answer-box">🖱️ Мышь / Тінтуір</div>
+            </div>
+
+            <!-- Загадка 4 -->
+            <div class="riddle-card" onclick="toggleReveal(this)">
+                <div class="riddle-number">Загадка №4</div>
+                <div class="riddle-block">🇷🇺 Если музыка звучит, то он весело кричит. Песни, сказки и рассказы мы услышим с ними сразу!</div>
+                <div class="riddle-block lang-kz">🇰🇿 Музыка ойнап ән салады, дыбысымды таратады. Ертегі мен әуенді бәрімізге тыңдатады.</div>
+                <div class="answer-box">🔊 Колонки / Динамик</div>
+            </div>
+
+            <!-- Загадка 5 -->
+            <div class="riddle-card" onclick="toggleReveal(this)">
+                <div class="riddle-number">Загадка №5</div>
+                <div class="riddle-block">🇷🇺 По экрану я гуляю, буквы мышкой набираю.</div>
+                <div class="riddle-block lang-kz">🇰🇿 Экранда мен жүремін, керек жерді көрсетемін. Тінтуірді қозғағанда, бірге қозғалып кетемін.</div>
+                <div class="answer-box">🖱️ Курсор / Меңзер</div>
+            </div>
+        </div>
+
+        <!-- Боковая панель управления -->
+        <div class="sidebar">
+            <div class="timer-title">Таймер раунда</div>
+            <div class="timer-display" id="timer">02:00</div>
+            <button class="btn" onclick="startTimer()">▶ Старт 2 мин</button>
+            <button class="btn btn-secondary" onclick="resetTimer()">🔄 Сбросить</button>
+            <button class="btn btn-secondary" onclick="revealAll()" style="margin-top: 15px;">👁️ Показать все ответы</button>
+        </div>
+    </div>
+
+    <footer>
+        💡 Нажмите на карточку с загадкой, чтобы открыть или скрыть правильный ответ на двух языках.
+    </footer>
+
+    <script>
+        function toggleReveal(card) {
+            card.classList.toggle('revealed');
+            playClickSound();
+        }
+
+        function revealAll() {
+            const cards = document.querySelectorAll('.riddle-card');
+            cards.forEach(card => card.classList.add('revealed'));
+            playClickSound();
+        }
+
+        let countdown = 120;
+        let timerInterval = null;
+        const timerDisplay = document.getElementById('timer');
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(countdown / 60);
+            let seconds = countdown % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (countdown <= 30) {
+                timerDisplay.classList.add('danger');
+            } else {
+                timerDisplay.classList.remove('danger');
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            playClickSound();
+            
+            timerInterval = setInterval(() => {
+                if (countdown > 0) {
+                    countdown--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    playAlarm();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            countdown = 120;
+            updateTimerDisplay();
+            timerDisplay.classList.remove('danger');
+            playClickSound();
+        }
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playClickSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function playAlarm() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            let now = audioCtx.currentTime;
+            for (let i = 0; i < 3; i++) {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.setValueAtTime(440, now + (i * 0.3));
+                gain.gain.setValueAtTime(0.15, now + (i * 0.3));
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.3) + 0.2);
+                osc.start(now + (i * 0.3));
+                osc.stop(now + (i * 0.3) + 0.2);
+            }
+        }
+    </script>
+</body>
+</html>
